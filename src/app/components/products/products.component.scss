@@ -15,9 +15,18 @@
   justify-content: flex-start;
   transition: all ease-out 0.5s;
   transform: translateX(100%);
+
   &.active {
     transform: translateX(0);
   }
+}
+
+.card {
+  text-align: center;
+}
+
+.card-img-top {
+  width: 50%;
 }
 
 // tablets

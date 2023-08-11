@@ -16,6 +16,17 @@ export class ProductsComponent implements OnInit {
   total = 0;
   products: Product[] = [];
   showProductDetail = false;
+  productChosen: Product = {
+    id: '',
+    price: 0,
+    images: [],
+    title: '',
+    category: {
+      id: '',
+      name: '',
+    },
+    description: ''
+  };
 
   constructor(
     private storeService: StoreService,
@@ -26,9 +37,9 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.productsService.getAllProducts()
-    .subscribe(data => {
-      this.products = data;
-    });
+      .subscribe(data => {
+        this.products = data;
+      });
   }
 
   onAddToShoppingCart(product: Product) {
@@ -36,8 +47,17 @@ export class ProductsComponent implements OnInit {
     this.total = this.storeService.getTotal();
   }
 
-  toggleProductDetail(){
+  toggleProductDetail() {
     this.showProductDetail = !this.showProductDetail;
+  }
+
+  onShowDetail(id: string) {
+    this.productsService.getProductById(id)
+      .subscribe(data => {
+        if (!this.showProductDetail)
+          this.toggleProductDetail();
+        this.productChosen = data;
+      });
   }
 
 }
