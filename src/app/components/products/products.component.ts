@@ -4,6 +4,8 @@ import { Product, ProductDTO, UpdateProductDTO } from '../../models/product.mode
 
 import { StoreService } from '../../services/store.service';
 import { ProductsService } from '../../services/products.service';
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-products',
@@ -29,6 +31,7 @@ export class ProductsComponent implements OnInit {
   };
   limit = 10;
   offset = 0;
+  statusDetail: 'loading' | 'success' | 'error' | 'init' = 'init';
 
   constructor(
     private storeService: StoreService,
@@ -51,11 +54,22 @@ export class ProductsComponent implements OnInit {
   }
 
   onShowDetail(id: string) {
+    this.statusDetail = 'loading';
     this.productsService.getProductById(id)
       .subscribe(data => {
         if (!this.showProductDetail)
           this.toggleProductDetail();
         this.productChosen = data;
+        this.statusDetail = 'success';
+      }, response => {
+        console.error(response);
+        this.statusDetail = 'error';
+        Swal.fire({
+          title: `Error`,
+          text: `${response}`,
+          icon: 'error',
+          confirmButtonText: 'Cool'
+        })
       });
   }
 
@@ -111,7 +125,7 @@ export class ProductsComponent implements OnInit {
         if (arrayCount === 0) {
           this.products = data;
         } else {
-         this.products = this.products.concat(data);
+          this.products = this.products.concat(data);
         }
         this.offset += this.limit;
       });
