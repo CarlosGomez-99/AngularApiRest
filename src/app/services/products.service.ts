@@ -4,12 +4,14 @@ import { retry } from 'rxjs/operators';
 
 import { Product, ProductDTO, UpdateProductDTO } from './../models/product.model';
 
+import { environment } from './../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
 
-  private apiUrl = '/api/v1/products';
+  private apiUrl = `${environment.API_URL}/api/v1/products`;
 
   constructor(
     private http: HttpClient
@@ -22,9 +24,9 @@ export class ProductsService {
       params = params.set('offset', offset);
     }
     return this.http.get<Product[]>(this.apiUrl, { params })
-    .pipe(
-      retry(3)
-    );
+      .pipe(
+        retry(3)
+      );
   }
 
   getProductById(id: string) {
